@@ -7,25 +7,25 @@ import csv
 import numpy as np
 
 # Import your model & dataset
-from wav2vec_dcp import BowelModel, BowelDataset  # adjust filename
+from wav2vec_bowel_model import BowelModel, BowelDataset  # adjust filename
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
 # 1. Load processor
-processor = AutoProcessor.from_pretrained("C:/Users/lenovo/Downloads/wav2vec2_base/")
+processor = AutoProcessor.from_pretrained("/wav2vec2_base/")
 
 # 2. Rebuild model
 model = BowelModel(num_classes=3).to(device)
-model.load_state_dict(torch.load("best_wav2vec2_bowel4.pt", map_location=device))
+model.load_state_dict(torch.load("best_wav2vec2_bowel.pt", map_location=device))
 model.eval()
 
-# 3. Validation dataset (replace with your file)
-val_dataset = BowelDataset(
-    "C:/Users/lenovo/Downloads/tech test/Tech Test/23M74M.wav",
-    "C:/Users/lenovo/Downloads/tech test/Tech Test/23M74M.txt",
+# 3. test dataset 
+test_dataset = BowelDataset(
+    "23M74M.wav",
+    "23M74M.txt",
     processor
 )
-val_loader = DataLoader(val_dataset, batch_size=1, shuffle=False)
+test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
 
 # 4. Collect predictions & labels
 frame_preds, frame_labels_all = [], []
@@ -98,7 +98,7 @@ def predict_and_export_csv(model, dataset, processor, device, csv_path="predicti
 
     print(f"✅ Predictions saved to {csv_path}")
 with torch.no_grad():
-    for batch in val_loader:
+    for batch in test_loader:
         input_values = batch["input_values"].to(device)
         attention_mask = batch["attention_mask"].to(device)
         frame_labels = batch["frame_labels"].to(device)
@@ -119,7 +119,7 @@ with torch.no_grad():
             pred_class = torch.argmax(logits, dim=1).item()
             seg_preds.append(pred_class)
             seg_labels.append(seg["class"])
-predict_and_export_csv(model, val_dataset, processor, device, csv_path="predictions.csv")
+predict_and_export_csv(model, test_dataset, processor, device, csv_path="predictions.csv")
 
 # 5. Frame-level metrics
 print("\n--- Frame-level Metrics ---")
@@ -134,3 +134,4 @@ print("Accuracy:", accuracy_score(seg_labels, seg_preds))
 print("F1 (macro):", f1_score(seg_labels, seg_preds, average="macro", zero_division=0))
 print("Precision (macro):", precision_score(seg_labels, seg_preds, average="macro", zero_division=0))
 print("Recall (macro):", recall_score(seg_labels, seg_preds, average="macro", zero_division=0))
+
