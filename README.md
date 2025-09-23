@@ -38,7 +38,7 @@ A transformer-based model pretrained on raw audio.
 
 Extracts deep, high-level audio features from the waveform.
 
-Output: Hidden representations per frame with dimensions [batch_size, time_steps, hidden_size].
+Output: Hidden representations per frame.
 
 Purpose: Capture temporal patterns and acoustic characteristics crucial for bowel sound detection.
 
