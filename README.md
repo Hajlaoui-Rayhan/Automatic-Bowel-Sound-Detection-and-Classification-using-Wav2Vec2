@@ -7,7 +7,7 @@ Bowel sound analysis is a valuable tool in gastrointestinal health monitoring. T
 
 The proposed approach leverages a pretrained Wav2Vec2 model as a feature extractor. The system performs two main tasks:
 
-Frame-level detection: Determine whether a bowel sound is present in short audio frames (sound vs. no sound).
+Frame-level detection: Determine whether a bowel sound is present in short audio frames (bowel sound vs. no bowel sound).
 
 Segment-level classification: Classify detected bowel sound segments into one of three categories:
 
