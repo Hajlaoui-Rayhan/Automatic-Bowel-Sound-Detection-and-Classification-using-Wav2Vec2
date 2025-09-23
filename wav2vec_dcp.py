@@ -9,6 +9,7 @@ from transformers import AutoProcessor, AutoModelForPreTraining
 from torch.nn.utils import clip_grad_norm_
 from torch.utils.data import random_split
 import matplotlib.pyplot as plt
+
 class BowelDataset(Dataset):
     def __init__(self, audio_file, label_file, processor, frame_ms=20, sample_rate=16000, chunk_sec=5):
         # Load and resample audio
@@ -102,7 +103,7 @@ class SoftIoULoss(nn.Module):
 class BowelModel(nn.Module):
     def __init__(self, num_classes=3):
         super().__init__()
-        self.backbone = AutoModelForPreTraining.from_pretrained("C:/Users/lenovo/Downloads/wav2vec2_base").wav2vec2
+        self.backbone = AutoModelForPreTraining.from_pretrained("/wav2vec2_base").wav2vec2
         hidden_size = self.backbone.config.hidden_size
 
         self.frame_classifier = nn.Sequential(
@@ -239,14 +240,14 @@ def validate_epoch(model, dataloader, device, class_weights):
     return avg_loss, frame_acc, seg_acc
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
-processor = AutoProcessor.from_pretrained("C:/Users/lenovo/Downloads/wav2vec2_base/")
+processor = AutoProcessor.from_pretrained("/wav2vec2_base/")
 
 model = BowelModel(num_classes=3).to(device)
 
 # ----------------------------
 # Datasets and DataLoaders
 # ----------------------------
-dataset = BowelDataset("C:/Users/lenovo/Downloads/tech test/Tech Test/AS_1.wav", "C:/Users/lenovo/Downloads/tech test/Tech Test/AS_1.txt", processor)
+dataset = BowelDataset("AS_1.wav", "AS_1.txt", processor)
 
 # 80% train, 20% validation
 train_size = int(0.8 * len(dataset))
@@ -285,7 +286,7 @@ if __name__ == "__main__":
         # ----------------------------
         # Save model
         # ----------------------------
-        torch.save(model.state_dict(),"best_wav2vec2_bowel4.pt")
+        torch.save(model.state_dict(),"best_wav2vec2_bowel.pt")
         print("Model saved successfully.")
         # ----------------------------
         # Plot losses
@@ -311,4 +312,5 @@ if __name__ == "__main__":
         plt.title("Frame & Segment Accuracy")
         plt.legend()
         plt.grid()
+
         plt.show()
