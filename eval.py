@@ -12,7 +12,7 @@ from wav2vec_bowel_model import BowelModel, BowelDataset  # adjust filename
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
 # 1. Load processor
-processor = AutoProcessor.from_pretrained("/wav2vec2_base/")
+processor = AutoProcessor.from_pretrained("PUT/YOUR/PATH/TO/wav2vec2_base/")
 
 # 2. Rebuild model
 model = BowelModel(num_classes=3).to(device)
@@ -21,8 +21,8 @@ model.eval()
 
 # 3. test dataset 
 test_dataset = BowelDataset(
-    "23M74M.wav",
-    "23M74M.txt",
+    "PUT/YOUR/PATH/TO/23M74M.wav",
+    "PUT/YOUR/PATH/TO/23M74M.txt",
     processor
 )
 test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
@@ -134,4 +134,5 @@ print("Accuracy:", accuracy_score(seg_labels, seg_preds))
 print("F1 (macro):", f1_score(seg_labels, seg_preds, average="macro", zero_division=0))
 print("Precision (macro):", precision_score(seg_labels, seg_preds, average="macro", zero_division=0))
 print("Recall (macro):", recall_score(seg_labels, seg_preds, average="macro", zero_division=0))
+
 
