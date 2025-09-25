@@ -103,7 +103,7 @@ class SoftIoULoss(nn.Module):
 class BowelModel(nn.Module):
     def __init__(self, num_classes=3):
         super().__init__()
-        self.backbone = AutoModelForPreTraining.from_pretrained("/wav2vec2_base").wav2vec2
+        self.backbone = AutoModelForPreTraining.from_pretrained("PUT/YOUR/PATH/TO/wav2vec2_base").wav2vec2
         hidden_size = self.backbone.config.hidden_size
 
         self.frame_classifier = nn.Sequential(
@@ -240,14 +240,14 @@ def validate_epoch(model, dataloader, device, class_weights):
     return avg_loss, frame_acc, seg_acc
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
-processor = AutoProcessor.from_pretrained("/wav2vec2_base/")
+processor = AutoProcessor.from_pretrained("PUT/YOUR/PATH/TO/wav2vec2_base/"*)
 
 model = BowelModel(num_classes=3).to(device)
 
 # ----------------------------
 # Datasets and DataLoaders
 # ----------------------------
-dataset = BowelDataset("AS_1.wav", "AS_1.txt", processor)
+dataset = BowelDataset("PUT/YOUR/PATH/TO/AS_1.wav",  "PUT/YOUR/PATH/TO/AS_1.txt", processor)
 
 # 80% train, 20% validation
 train_size = int(0.8 * len(dataset))
@@ -314,3 +314,4 @@ if __name__ == "__main__":
         plt.grid()
 
         plt.show()
+
